@@ -5,4 +5,4 @@ Simple tarsnap backup bourne-shell script with purging functionality. Meant to b
 
 *archives* The number of archives you wish to keep. 
 
-Archives are named by the folder the script is located in and the date and the time the script is run. Files and directories are to be listed one per line in the include.txt and exclude.txt files respectively.
+Archives are named by the folder the script is located in and the date and the time the script is run. Files and directories are to be listed one per line in the `include.txt` and `exclude.txt` files respectively.
