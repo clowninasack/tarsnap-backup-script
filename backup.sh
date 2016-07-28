@@ -3,7 +3,8 @@ prune=0
 keep=1
 tarsnap_args="--quiet"
 date=`date "+%F_%H-%M"`
-help="backup.sh [-n name] [-p] [-c count] [-i include] [-x exclude] [files | directories]\n\n-n\tSpecify the name of the archives\n-p\tEnable pruning\n-c\tNumber of archives to keep (default: 1)\n-i\tInclude file\n-x\t Exclude file"
+name="backup_$date"
+help="backup.sh [-h] [-n name] [-p] [-c count] [-i include] [-x exclude] [files | directories]\n\n-h\tShow this text\n-n\tSpecify the name of the archives (default: "backup")\n-p\tEnable pruning\n-c\tNumber of archives to keep (default: 1)\n-i\tInclude file\n-x\tExclude file\n"
 
 while getopts ":hn:pc:i:x:" opt; do
 	case $opt in
