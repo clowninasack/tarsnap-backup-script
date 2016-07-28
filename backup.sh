@@ -20,7 +20,7 @@ while getopts ":hn:pc:i:x:s" opt; do
 	    prune=$true
 	    ;;
 	  c)
-	    if [ $OPTARG -gt 1 ]
+	    if [ $OPTARG -gt 1 ] 2>/dev/null
 	    then
 	    	keep=$OPTARG
 	    else
