@@ -1,12 +1,13 @@
 #!/bin/sh
-prune=0
+prune=$false
 keep=1
+stats=$true
 tarsnap_args="--quiet"
 date=`date "+%F_%H-%M"`
 name="backup"
-help="backup.sh [-h] [-n name] [-p] [-c count] [-i include] [-x exclude] [files | directories]\n\n-h\tShow this text\n-n\tSpecify the name of the archives (default: "backup")\n-p\tEnable pruning\n-c\tNumber of archives to keep (default: 1)\n-i\tInclude file\n-x\tExclude file\n"
+help="backup.sh [-h] [-n name] [-p] [-c count] [-i include] [-x exclude] [-s] [files | directories]\n\n-h\tShow this text\n-n\tSpecify the name of the archives (default: "backup")\n-p\tEnable pruning\n-c\tNumber of archives to keep (default: 1)\n-i\tInclude file\n-x\tExclude file\n-s\tDo not print statistics\n"
 
-while getopts ":hn:pc:i:x:" opt; do
+while getopts ":hn:pc:i:x:s" opt; do
 	case $opt in
 	  h)
 	    printf "$help"
@@ -16,7 +17,7 @@ while getopts ":hn:pc:i:x:" opt; do
 	    name="${OPTARG}"
 	    ;;
 	  p)
-	    prune=1
+	    prune=$true
 	    ;;
 	  c)
 	    if [ $OPTARG -gt 1 ]
@@ -32,6 +33,9 @@ while getopts ":hn:pc:i:x:" opt; do
 	    ;;
 	  x)
 	    tarsnap_args="$tarsnap_args -X $OPTARG"
+	    ;;
+	  s)
+	    stats=$false
 	    ;;
 	  \?)
 	    echo "Invalid option: -$OPTARG" >&2
@@ -52,7 +56,7 @@ echo "Starting $name tarsnap backup..."
 
 if /usr/local/bin/tarsnap $tarsnap_args -cf "${name}_${date}" $*
 then
-	echo "Completed $name tarsnap backup."
+	echo "Successfully completed $name tarsnap backup."
 else
 	echo "Failed $name tarsnap backup."
 	exit 1
@@ -79,13 +83,12 @@ then
 	else
 		echo "Pruning not required."
 	fi
-else
-	echo "prune off"
 fi
 
-if /usr/local/bin/tarsnap --print-stats --humanize-numbers
+if [ $stats ]
 then
-	exit 0
-else
-	exit 1
+	echo "Tarsnap stats:"
+	/usr/local/bin/tarsnap --print-stats --humanize-numbers
 fi
+
+exit 0
