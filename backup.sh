@@ -1,10 +1,11 @@
 #!/bin/sh
 prune=0
 keep=1
+tarsnap_args="--quiet"
 date=`date "+%F_%H-%M"`
-help="backup.sh [-n name] [-p] [-c count]\n\n-n\tSpecify the name of the archives\n-p\tEnable pruning\n-c\tNumber of archives to keep (default: 1)\n"
+help="backup.sh [-n name] [-p] [-c count] [-i include] [-x exclude] [files | directories]\n\n-n\tSpecify the name of the archives\n-p\tEnable pruning\n-c\tNumber of archives to keep (default: 1)\n-i\tInclude file\n-x\t Exclude file"
 
-while getopts ":hn:pc:" opt; do
+while getopts ":hn:pc:i:x:" opt; do
 	case $opt in
 	  h)
 	    printf "$help"
@@ -15,6 +16,10 @@ while getopts ":hn:pc:" opt; do
 	    prune=1;;
 	  c)
 	    keep=$OPTARG;;
+	  i)
+	    tarsnap_args="$tarsnap_args -T $OPTARG";;
+	  x)
+	    tarsnap_args="$tarsnap_args -X $OPTARG";;
 	  \?)
 	    echo "Invalid option: -$OPTARG" >&2
 	    printf "$help"
@@ -26,9 +31,11 @@ while getopts ":hn:pc:" opt; do
 	esac
 done
 
+shift $((OPTIND-1))
+
 echo "Starting $name tarsnap backup..."
 
-if /usr/local/bin/tarsnap --quiet -cf "$name"
+if /usr/local/bin/tarsnap $tarsnap_args -cf "$name" $*
 then
 	echo "Completed $name tarsnap backup."
 else
