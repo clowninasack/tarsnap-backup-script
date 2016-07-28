@@ -12,7 +12,7 @@ while getopts ":hn:pc:i:x:" opt; do
 	    printf "$help"
 	    exit 0;;
 	  n)
-	    name="$OPTARG_$date";;
+	    name="${OPTARG}_$date";;
 	  p)
 	    prune=1;;
 	  c)
@@ -47,8 +47,8 @@ fi
 if [ $prune ]
 then
 	list=`/usr/local/bin/tarsnap --quiet --list-archives | grep $name | sort`
-	wc=`echo "$list" | wc -l`
-	if [ $wc -gt $count ]
+	archives=`echo "$list" | wc -l`
+	if [ $archives -gt $keep ]
 	then
 		delete=`expr $wc - $keep`
 	 	list=`echo "$list" | head -n $delete | awk '{print "-f " $0}'`
