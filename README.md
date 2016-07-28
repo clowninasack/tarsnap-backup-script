@@ -10,4 +10,5 @@ backup.sh [-h] [-n name] [-p] [-c count] [-i include] [-x exclude] [files | dire
 -c      Number of archives to keep (default: 1)
 -i      Include file
 -x      Exclude file
+-s	Do not print statistics
 ```
